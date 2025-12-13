@@ -67,3 +67,20 @@ begin
     Snack: KategoriToString := 'Snack';
   end;
 end;
+
+function FormatRupiah(nilai: longint): string;
+var
+  s: string;
+  i, len: integer;
+begin
+  str(nilai, s);
+  len := length(s);
+  i := len - 2;
+  while i > 1 do
+  begin
+    insert('.', s, i);
+    i := i - 3;
+  end;
+  FormatRupiah := 'Rp ' + s;
+end;
+

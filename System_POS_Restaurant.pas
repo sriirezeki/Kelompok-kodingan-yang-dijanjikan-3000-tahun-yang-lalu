@@ -49,3 +49,21 @@ type
     kembalian: longint;
     tanggal: string[20];
   end;
+  
+var
+  menu: array[1..MAX_MENU] of TMenu;
+  meja: array[1..MAX_MEJA] of TMeja;
+  transaksi: array[1..MAX_TRANSAKSI] of TTransaksi;
+  jumlahMenu, jumlahTransaksi: integer;
+  username, password: string;
+
+// konversi kategori ke string
+function KategoriToString(k: TKategori): string;
+begin
+  case k of
+    Makanan: KategoriToString := 'Makanan';
+    Minuman: KategoriToString := 'Minuman';
+    Dessert: KategoriToString := 'Dessert';
+    Snack: KategoriToString := 'Snack';
+  end;
+end;

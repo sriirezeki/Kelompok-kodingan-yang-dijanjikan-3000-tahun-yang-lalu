@@ -154,6 +154,7 @@ begin
   end;
 end;
 
+// sistem login
 function Login: boolean;
 var
   inputUser, inputPass: string;
@@ -189,4 +190,46 @@ begin
   until percobaan = 3;
   
   Login := false;
+end;
+
+//  tampilkan menu makanan
+procedure TampilkanMenu;
+var i: integer;
+begin
+  clrscr;
+  writeln('================================================================================');
+  writeln('                           DAFTAR MENU RESTORAN                             ');
+  writeln('================================================================================');
+  writeln;
+  writeln('Kode     Nama Menu                    Kategori      Harga         Stok  Status');
+  writeln('--------------------------------------------------------------------------------');
+  
+  for i := 1 to jumlahMenu do
+  begin
+    write(menu[i].kode:8, ' ');
+    write(menu[i].nama:30, ' ');
+    write(KategoriToString(menu[i].kategori):12, ' ');
+    write(FormatRupiah(menu[i].harga):15, ' ');
+    write(menu[i].stok:5, '  ');
+    if menu[i].tersedia then
+      writeln('Tersedia')
+    else
+      writeln('Habis');
+  end;
+  writeln;
+end;
+
+//  cari menu berdasarkan kode
+function CariMenu(kode: string): integer;
+var i: integer;
+begin
+  CariMenu := -1;
+  for i := 1 to jumlahMenu do
+  begin
+    if menu[i].kode = kode then
+    begin
+      CariMenu := i;
+      exit;
+    end;
+  end;
 end;

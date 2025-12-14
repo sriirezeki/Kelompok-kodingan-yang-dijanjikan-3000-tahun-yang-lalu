@@ -233,3 +233,113 @@ begin
     end;
   end;
 end;
+
+procedure TampilkanStatusMeja;
+var i: integer;
+begin
+  clrscr;
+  writeln('================================================');
+  writeln('          STATUS MEJA RESTORAN              ');
+  writeln('================================================');
+  writeln;
+  
+  for i := 1 to MAX_MEJA do
+  begin
+    write('Meja ', i:2, ': ');
+    if meja[i].terisi then
+      writeln('[TERISI] - ', meja[i].namaCustomer)
+    else
+      writeln('[KOSONG]');
+  end;
+  writeln;
+end;
+
+procedure BuatOrderBaru;
+var
+  noMeja, idx, jumlah: integer;
+  kodeMenu, nama: string;
+  lanjut: char;
+begin
+  TampilkanStatusMeja;
+  write('Pilih nomor meja (1-', MAX_MEJA, '): '); readln(noMeja);
+  
+  if (noMeja < 1) or (noMeja > MAX_MEJA) then
+  begin
+    writeln('Nomor meja tidak valid!');
+    readln;
+    exit;
+  end;
+  
+  if meja[noMeja].terisi then
+  begin
+    writeln('Meja sudah terisi! Gunakan menu Edit Order.');
+    readln;
+    exit;
+  end;
+  
+  write('Nama Customer: '); readln(nama);
+  meja[noMeja].terisi := true;
+  meja[noMeja].namaCustomer := nama;
+  meja[noMeja].jumlahItem := 0;
+  meja[noMeja].totalBayar := 0;
+  
+  repeat
+    TampilkanMenu;
+    writeln('Order untuk Meja ', noMeja, ' - ', nama);
+    writeln;
+    write('Masukkan kode menu: '); readln(kodeMenu);
+    
+    idx := CariMenu(kodeMenu);
+    if idx = -1 then
+    begin
+      writeln('Kode menu tidak ditemukan!');
+      write('Tekan Enter...'); readln;
+      continue;
+    end;
+    
+    if not menu[idx].tersedia then
+    begin
+      writeln('Menu tidak tersedia!');
+      write('Tekan Enter...'); readln;
+      continue;
+    end;
+    
+    write('Jumlah pesanan: '); readln(jumlah);
+    
+    if jumlah <= 0 then
+    begin
+      writeln('Jumlah harus lebih dari 0!');
+      write('Tekan Enter...'); readln;
+      continue;
+    end;
+    
+    if jumlah > menu[idx].stok then
+    begin
+      writeln('Stok tidak mencukupi! Stok tersedia: ', menu[idx].stok);
+      write('Tekan Enter...'); readln;
+      continue;
+    end;
+    
+    meja[noMeja].jumlahItem := meja[noMeja].jumlahItem + 1;
+    
+    meja[noMeja].items[meja[noMeja].jumlahItem].kodeMenu := menu[idx].kode;
+    meja[noMeja].items[meja[noMeja].jumlahItem].namaMenu := menu[idx].nama;
+    meja[noMeja].items[meja[noMeja].jumlahItem].jumlah := jumlah;
+    meja[noMeja].items[meja[noMeja].jumlahItem].hargaSatuan := menu[idx].harga;
+    meja[noMeja].items[meja[noMeja].jumlahItem].subtotal := jumlah * menu[idx].harga;
+    
+    menu[idx].stok := menu[idx].stok - jumlah;
+    meja[noMeja].totalBayar := meja[noMeja].totalBayar + meja[noMeja].items[meja[noMeja].jumlahItem].subtotal;
+    
+    writeln;
+    writeln('Item berhasil ditambahkan!');
+    writeln('- Menu: ', menu[idx].nama);
+    writeln('- Jumlah: ', jumlah);
+    writeln('- Subtotal: ', FormatRupiah(meja[noMeja].items[meja[noMeja].jumlahItem].subtotal));
+    write('Tambah item lagi? (y/n): '); readln(lanjut);
+  until (lanjut <> 'y') and (lanjut <> 'Y');
+  
+  writeln;
+  writeln('Order berhasil dibuat!');
+  write('Tekan Enter untuk kembali...'); readln;
+end;

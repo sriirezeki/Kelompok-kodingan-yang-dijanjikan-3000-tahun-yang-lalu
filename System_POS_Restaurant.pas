@@ -153,3 +153,40 @@ begin
     meja[i].totalBayar := 0;
   end;
 end;
+
+function Login: boolean;
+var
+  inputUser, inputPass: string;
+  percobaan: integer;
+begin
+  percobaan := 0;
+  repeat
+    clrscr;
+    writeln('================================================');
+    writeln('     SISTEM POS RESTORAN/CAFE - LOGIN      ');
+    writeln('================================================');
+    writeln;
+    write('Username: '); readln(inputUser);
+    write('Password: '); readln(inputPass);
+    
+    if (inputUser = 'admin') and (inputPass = 'admin123') then
+    begin
+      Login := true;
+      exit;
+    end
+    else
+    begin
+      percobaan := percobaan + 1;
+      writeln;
+      writeln('Login gagal! Username atau password salah.');
+      writeln('Percobaan ke-', percobaan, ' dari 3');
+      if percobaan < 3 then
+      begin
+        write('Tekan Enter untuk mencoba lagi...');
+        readln;
+      end;
+    end;
+  until percobaan = 3;
+  
+  Login := false;
+end;

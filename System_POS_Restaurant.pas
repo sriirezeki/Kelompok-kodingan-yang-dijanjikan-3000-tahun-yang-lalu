@@ -234,6 +234,7 @@ begin
   end;
 end;
 
+// status meja
 procedure TampilkanStatusMeja;
 var i: integer;
 begin
@@ -254,6 +255,7 @@ begin
   writeln;
 end;
 
+// buat order baru
 procedure BuatOrderBaru;
 var
   noMeja, idx, jumlah: integer;
@@ -341,5 +343,53 @@ begin
   
   writeln;
   writeln('Order berhasil dibuat!');
+  write('Tekan Enter untuk kembali...'); readln;
+end;
+
+// detail order
+procedure LihatDetailOrder;
+var
+  noMeja, i: integer;
+begin
+  TampilkanStatusMeja;
+  write('Pilih nomor meja: '); readln(noMeja);
+  
+  if (noMeja < 1) or (noMeja > MAX_MEJA) then
+  begin
+    writeln('Nomor meja tidak valid!');
+    readln;
+    exit;
+  end;
+  
+  if not meja[noMeja].terisi then
+  begin
+    writeln('Meja kosong!');
+    readln;
+    exit;
+  end;
+  
+  clrscr;
+  writeln('========================================================================');
+  writeln('                    DETAIL ORDER - MEJA ', noMeja:2, '                         ');
+  writeln('========================================================================');
+  writeln('Customer: ', meja[noMeja].namaCustomer);
+  writeln('Jumlah Item: ', meja[noMeja].jumlahItem);
+  writeln;
+  writeln('No. Kode    Nama Menu                  Qty  Harga       Subtotal');
+  writeln('------------------------------------------------------------------------');
+  
+  for i := 1 to meja[noMeja].jumlahItem do
+  begin
+    write(i:3, '. ');
+    write(meja[noMeja].items[i].kodeMenu:7, ' ');
+    write(meja[noMeja].items[i].namaMenu:25, ' ');
+    write(meja[noMeja].items[i].jumlah:4, ' ');
+    write(FormatRupiah(meja[noMeja].items[i].hargaSatuan):12, ' ');
+    writeln(FormatRupiah(meja[noMeja].items[i].subtotal):12);
+  end;
+  
+  writeln('------------------------------------------------------------------------');
+  writeln('TOTAL: ', FormatRupiah(meja[noMeja].totalBayar):52);
+  writeln;
   write('Tekan Enter untuk kembali...'); readln;
 end;

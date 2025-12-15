@@ -394,6 +394,7 @@ begin
   write('Tekan Enter untuk kembali...'); readln;
 end;
 
+// proses pembayaran
 procedure ProsesPembayaran;
 var
   noMeja: integer;
@@ -450,6 +451,7 @@ begin
   writeln;
   writeln('Pembayaran berhasil!');
   
+  // Jumlah transaksi
   jumlahTransaksi := jumlahTransaksi + 1;
   with transaksi[jumlahTransaksi] do
   begin
@@ -465,6 +467,7 @@ begin
     tanggal := 'Today';
   end;
   
+  // Reset meja
   meja[noMeja].terisi := false;
   meja[noMeja].namaCustomer := '';
   meja[noMeja].jumlahItem := 0;
@@ -472,3 +475,59 @@ begin
   
   write('Tekan Enter untuk kembali...'); readln;
 end;
+
+// menu utama
+procedure MenuUtama;
+var
+  pilihan: integer;
+begin
+  repeat
+    clrscr;
+    writeln('================================================');
+    writeln('      SISTEM POS RESTORAN/CAFE v1.0         ');
+    writeln('================================================');
+    writeln('  1. Lihat Menu                             ');
+    writeln('  2. Tambah Stok Menu                       ');
+    writeln('  3. Lihat Status Meja                      ');
+    writeln('  4. Buat Order Baru                        ');
+    writeln('  5. Lihat Detail Order                     ');
+    writeln('  6. Proses Pembayaran                      ');
+    writeln('  0. Keluar                                 ');
+    writeln('================================================');
+    write('Pilih menu: '); readln(pilihan);
+    
+    case pilihan of
+      1: begin TampilkanMenu; write('Tekan Enter...'); readln; end;
+      2: TambahStok;
+      3: begin TampilkanStatusMeja; write('Tekan Enter...'); readln; end;
+      4: BuatOrderBaru;
+      5: LihatDetailOrder;
+      6: ProsesPembayaran;
+      0: writeln('Terima kasih Atas Kerja Kerasnya!');
+    else
+      begin
+        writeln('Pilihan tidak valid!');
+        readln;
+      end;
+    end;
+  until pilihan = 0;
+end;
+
+// program utama
+begin
+  InitMenu;
+  InitMeja;
+  jumlahTransaksi := 0;
+  
+  if Login then
+  begin
+    MenuUtama;
+  end
+  else
+  begin
+    clrscr;
+    writeln('Login gagal 3 kali! Program ditutup.');
+    writeln('Tekan Enter untuk keluar...');
+    readln;
+  end;
+end.

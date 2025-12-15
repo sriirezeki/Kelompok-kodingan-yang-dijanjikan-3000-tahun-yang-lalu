@@ -393,3 +393,82 @@ begin
   writeln;
   write('Tekan Enter untuk kembali...'); readln;
 end;
+
+procedure ProsesPembayaran;
+var
+  noMeja: integer;
+  diskon, totalAkhir, bayar, kembalian: longint;
+  pilihan: char;
+begin
+  TampilkanStatusMeja;
+  write('Pilih nomor meja untuk pembayaran: '); readln(noMeja);
+  
+  if (noMeja < 1) or (noMeja > MAX_MEJA) then
+  begin
+    writeln('Nomor meja tidak valid!');
+    readln;
+    exit;
+  end;
+  
+  if not meja[noMeja].terisi then
+  begin
+    writeln('Meja kosong!');
+    readln;
+    exit;
+  end;
+  
+  clrscr;
+  writeln('================================================');
+  writeln('           PROSES PEMBAYARAN                ');
+  writeln('================================================');
+  writeln('Meja       : ', noMeja);
+  writeln('Customer   : ', meja[noMeja].namaCustomer);
+  writeln('Total      : ', FormatRupiah(meja[noMeja].totalBayar));
+  writeln;
+  write('Berikan diskon? (y/n): '); readln(pilihan);
+  
+  diskon := 0;
+  if (pilihan = 'y') or (pilihan = 'Y') then
+  begin
+    write('Nominal diskon (Rp): '); readln(diskon);
+  end;
+  
+  totalAkhir := meja[noMeja].totalBayar - diskon;
+  writeln;
+  writeln('Total setelah diskon: ', FormatRupiah(totalAkhir));
+  write('Jumlah bayar: Rp '); readln(bayar);
+  
+  if bayar < totalAkhir then
+  begin
+    writeln('Pembayaran kurang!');
+    readln;
+    exit;
+  end;
+  
+  kembalian := bayar - totalAkhir;
+  writeln('Kembalian: ', FormatRupiah(kembalian));
+  writeln;
+  writeln('Pembayaran berhasil!');
+  
+  jumlahTransaksi := jumlahTransaksi + 1;
+  with transaksi[jumlahTransaksi] do
+  begin
+    str(jumlahTransaksi, noTransaksi);
+    noTransaksi := 'TRX' + noTransaksi;
+    noMeja := noMeja;
+    namaCustomer := meja[noMeja].namaCustomer;
+    totalBayar := meja[noMeja].totalBayar;
+    diskon := diskon;
+    totalAkhir := totalAkhir;
+    bayar := bayar;
+    kembalian := kembalian;
+    tanggal := 'Today';
+  end;
+  
+  meja[noMeja].terisi := false;
+  meja[noMeja].namaCustomer := '';
+  meja[noMeja].jumlahItem := 0;
+  meja[noMeja].totalBayar := 0;
+  
+  write('Tekan Enter untuk kembali...'); readln;
+end;

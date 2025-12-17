@@ -234,6 +234,60 @@ begin
   end;
 end;
 
+// tambah stok menu
+procedure TambahStok;
+var
+  kode: string;
+  idx, tambahan: integer;
+  lanjut: char;
+begin
+  repeat
+    TampilkanMenu;
+    writeln('================================================================================');
+    writeln('                              TAMBAH STOK MENU                              ');
+    writeln('================================================================================');
+    writeln;
+    
+    write('Masukkan kode menu (0 untuk kembali): '); readln(kode);
+    
+    if kode = '0' then
+      exit;
+    
+    idx := CariMenu(kode);
+    if idx = -1 then
+    begin
+      writeln('Kode menu tidak ditemukan!');
+      write('Tekan Enter...'); readln;
+      continue;
+    end;
+    
+    writeln;
+    writeln('Menu dipilih: ', menu[idx].nama);
+    writeln('Stok saat ini: ', menu[idx].stok);
+    write('Tambah stok sebanyak: '); readln(tambahan);
+    
+    if tambahan <= 0 then
+    begin
+      writeln('Jumlah harus lebih dari 0!');
+      write('Tekan Enter...'); readln;
+      continue;
+    end;
+    
+    menu[idx].stok := menu[idx].stok + tambahan;
+    
+    if menu[idx].stok > 0 then
+      menu[idx].tersedia := true;
+    
+    writeln;
+    writeln('Stok berhasil ditambahkan!');
+    writeln('- Menu: ', menu[idx].nama);
+    writeln('- Penambahan: +', tambahan);
+    writeln('- Stok baru: ', menu[idx].stok);
+    writeln;
+    write('Tambah stok menu lain? (y/n): '); readln(lanjut);
+  until (lanjut <> 'y') and (lanjut <> 'Y');
+end;
+
 // status meja
 procedure TampilkanStatusMeja;
 var i: integer;
